@@ -9,7 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Cargamos las librerías
+**Librerías**
+Cargamos las librerías que vamos a utilizar.
 
 ```{r}
 library(ggplot2)
@@ -18,4 +19,21 @@ library(plotly)
 library(dplyr)
 library(showtext)
 ```
+**Importación de datos**
+Cargamos en una variable los datos de la web.
+```{r}
+df <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+```
+
+**Modificación de variables**
+Cambiamos el formato de las variables para poder manejarlas de mejor manera.
+
+```{r}
+df$date <- as.Date(df$date, format = "Y%/m%/d%")
+paises <- c("Spain","Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
+paises_covid <- df %>% group_by(location, date) %>% filter(location %in% paises) %>%
+  summarise(muertes = new_deaths_smoothed_per_million)
+summary(paises_covid)
+```
+
 
