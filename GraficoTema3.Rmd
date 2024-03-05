@@ -19,21 +19,52 @@ library(plotly)
 library(dplyr)
 library(showtext)
 ```
+
 **Importación de datos**
 Cargamos en una variable los datos de la web.
 ```{r}
-df <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
 ```
 
 **Modificación de variables**
 Cambiamos el formato de las variables para poder manejarlas de mejor manera.
 
 ```{r}
-df$date <- as.Date(df$date, format = "Y%/m%/d%")
-paises <- c("Spain","Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
-paises_covid <- df %>% group_by(location, date) %>% filter(location %in% paises) %>%
+#Ponemos el formato de fecha adecuado
+data$date <- as.Date(data$date)
+
+#Creamos un vector con los paises que queremos representar
+paises <- c("Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
+
+#Creamos un nuevo df con las variables que necesitamos para el gráfico
+paises <- data %>% group_by(location, date) %>% filter(location %in% paises) %>%
   summarise(muertes = new_deaths_smoothed_per_million)
-summary(paises_covid)
+
+#Uno distinto para España
+spain <- data %>% group_by(location, date) %>% filter(location == "Spain") %>%
+  summarise(muertes = new_deaths_smoothed_per_million)
 ```
+
+
+**Gráfico**
+Creamos el grafico con la librería 'ggplot2'
+
+```{r Gráfico}
+#Primero creamos un vector con los colores que vamos a utilizar
+colores <- c("Italy" = "cyan4",
+             "United States" = "darkorchid4", "Germany" = "palegreen4",
+             "Canada" = "orangered4", "Japan" = "skyblue4", 
+             "United Kingdom" = "maroon", "France" = "sienna")
+paises$location <- as.factor(paises$location)
+#Creamos el gráfico
+graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
+  geom_line() + geom_line(mapping = aes(x = date, y = muertes),
+                          colour = "red", data = spain, linewidth = 1 ) + 
+  scale_colour_manual(values = colores) 
+graf
+
+```
+
+
 
 
