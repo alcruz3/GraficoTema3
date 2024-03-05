@@ -2,7 +2,9 @@
 title: "Gráfico Tema 3"
 author: "Carolina Martínez, Álvaro Cruz, Roberto Millan y Alexandra Estela Garcia"
 date: "2024-02-29"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -12,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Librerías**
 Cargamos las librerías que vamos a utilizar.
 
-```{r}
+```{r Librerias}
 library(ggplot2)
 library(tidyverse)
 library(plotly)
@@ -22,14 +24,14 @@ library(showtext)
 
 **Importación de datos**
 Cargamos en una variable los datos de la web.
-```{r}
+```{r Datos}
 data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
 ```
 
 **Modificación de variables**
 Cambiamos el formato de las variables para poder manejarlas de mejor manera.
 
-```{r}
+```{r Variables}
 #Ponemos el formato de fecha adecuado
 data$date <- as.Date(data$date)
 
@@ -56,16 +58,37 @@ colores <- c("Spain"="red","Italy" = "cyan4",
              "Canada" = "orangered4", "Japan" = "skyblue4", 
              "United Kingdom" = "maroon", "France" = "sienna")
 paises$location <- as.factor(paises$location)
+
+#Ponemos las fuentes de texto que vamos a utilizar
+## Loading Google fonts (https://fonts.google.com/)
+font_add_google("Roboto", "Roboto")
+font_add_google("EB Garamond", "gara")
+
+showtext.auto()
+
+
 #Creamos el gráfico
 graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
   geom_line() + geom_line(mapping = aes(x = date, y = muertes),
                           colour = "red", data = spain, linewidth = 1 ) + 
   scale_colour_manual(values = colores) + 
   labs(title = "Daily new confirmed COVID-19 deaths per million people", 
-       subtitle = "7-day rolling average. For some countries the number of confirmed deaths is much lower than the true number of deaths. This is because of limited testing and challenges in the attribution of the couse of death.", x = "", y = "", caption = "Source:Johns Hopkins University CSSE COVID-19 Data")
+       subtitle = "7-day rolling average. For some countries the number of confirmed deaths is much lower than the true number of deaths. This is because of limited
+testing and challenges in the attribution of the couse of death.", x = NULL, y = NULL, caption = "Source:Johns Hopkins University CSSE COVID-19 Data")+ 
+  theme(plot.title = element_text(size = 20, 
+                                  colour = "#222222",
+                                  family = "gara"),
+        plot.subtitle = element_text(size = 10,
+                                     colour = "#757575",
+                                     family = "Roboto"),
+        plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0))
 graf
+```
 
-#Creamos un gráfico iteractivo
+**Gráfico interactivo**
+
+```{r Grafico interactivo}
 grafite <- ggplotly(graf)
 grafite
 
