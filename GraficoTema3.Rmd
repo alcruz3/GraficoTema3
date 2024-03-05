@@ -65,6 +65,10 @@ graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
        subtitle = "7-day rolling average. For some countries the number of confirmed deaths is much lower than the true number of deaths. This is because of limited testing and challenges in the attribution of the couse of death.", x = "", y = "", caption = "Source:Johns Hopkins University CSSE COVID-19 Data")
 graf
 
+#Creamos un gráfico iteractivo
+grafite <- ggplotly(graf)
+grafite
+
 ```
 
 
