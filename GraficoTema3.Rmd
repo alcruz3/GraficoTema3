@@ -36,7 +36,8 @@ Cambiamos el formato de las variables para poder manejarlas de mejor manera.
 data$date <- as.Date(data$date)
 
 #Creamos un vector con los paises que queremos representar
-paises <- c("Spain","Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
+paises <- c("Spain","Italy","United States", "Germany","Canada",
+            "Japan","United Kingdom", "France")
 
 #Creamos un nuevo df con las variables que necesitamos para el gráfico
 paises <- data %>% group_by(location, date) %>% filter(location %in% paises) %>%
@@ -72,13 +73,16 @@ graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
   geom_line() + geom_line(mapping = aes(x = date, y = muertes),
                           colour = "red", data = spain, linewidth = 1 ) + 
   scale_colour_manual(values = colores) + 
-  labs(title = "Daily new confirmed COVID-19 deaths per million people", 
+  labs(title = "Grupo T:
+Daily new confirmed COVID-19 deaths per million people", 
        subtitle = "7-day rolling average. For some countries the number of confirmed deaths is much lower than the true number of deaths. This is because of limited
-testing and challenges in the attribution of the couse of death.", x = NULL, y = NULL, caption = "Source:Johns Hopkins University CSSE COVID-19 Data")+ 
-  theme(plot.title = element_text(size = 20, 
+testing and challenges in the attribution of the couse of death.",
+x = NULL, y = NULL, 
+caption = "Source:Johns Hopkins University CSSE COVID-19 Data")+ 
+  theme(plot.title = element_text(size = 18, 
                                   colour = "#222222",
                                   family = "gara"),
-        plot.subtitle = element_text(size = 10,
+        plot.subtitle = element_text(size = 9,
                                      colour = "#757575",
                                      family = "Roboto"),
         plot.caption.position = "plot",
@@ -88,7 +92,7 @@ graf
 
 **Gráfico interactivo**
 
-```{r Grafico interactivo}
+``{r Grafico interactivo}
 grafite <- ggplotly(graf)
 grafite
 
