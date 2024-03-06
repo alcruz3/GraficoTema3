@@ -36,24 +36,23 @@ Cambiamos el formato de las variables para poder manejarlas de mejor manera.
 #Ponemos el formato de fecha adecuado
 date <- data %>%
   mutate(date = as.Date(date))
-date
+
 #Creamos un vector con los paises que queremos representar
 paises <- c("Spain","Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
 
 #Creamos un nuevo df con las variables que necesitamos para el gráfico
 paises <- data %>% 
-  group_by(location, date) %>% 
   filter(location %in% paises) %>%
-  mutate(muertes = new_deaths_smoothed_per_million) %>%
-  top_n(8, muertes)
-
+  mutate(muertes = new_deaths_smoothed_per_million) 
+  
+paises
 #Uno distinto para España para poder modificar el ancho de linea
 Spain <- data %>% 
   group_by(location, date) %>% 
   filter(location %in% "Spain") %>%
   mutate(muertes = new_deaths_smoothed_per_million)
 
-
+Spain
 ```
 
 
