@@ -26,6 +26,7 @@ library(showtext)
 Cargamos en una variable los datos de la web.
 ```{r Datos}
 data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+data
 ```
 
 **Modificación de variables**
@@ -33,20 +34,29 @@ Cambiamos el formato de las variables para poder manejarlas de mejor manera.
 
 ```{r Variables}
 #Ponemos el formato de fecha adecuado
-data$date <- as.Date(data$date)
+date <- data %>%
+  mutate(date = as.Date(date))
 
 #Creamos un vector con los paises que queremos representar
 paises <- c("Spain","Italy","United States", "Germany","Canada",
             "Japan","United Kingdom", "France")
 
 #Creamos un nuevo df con las variables que necesitamos para el gráfico
-paises <- data %>% group_by(location, date) %>% filter(location %in% paises) %>%
-  summarise(muertes = new_deaths_smoothed_per_million)
-
+paises <- data %>% 
+  filter(location %in% paises) %>%
+  mutate(muertes = new_deaths_smoothed_per_million) 
+  
+paises
 #Uno distinto para España para poder modificar el ancho de linea
-spain <- data %>% group_by(location, date) %>% filter(location == "Spain") %>%
-  summarise(muertes = new_deaths_smoothed_per_million)
+Spain <- data %>% 
+  group_by(location, date) %>% 
+  filter(location %in% "Spain") %>%
+  mutate(muertes = new_deaths_smoothed_per_million)
+
+Spain
 ```
+
+
 
 
 **Gráfico**
@@ -71,15 +81,20 @@ showtext.auto()
 #Creamos el gráfico
 graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
   geom_line() + geom_line(mapping = aes(x = date, y = muertes),
-                          colour = "red", data = spain, linewidth = 1 ) + 
+                          colour = "red", data = Spain, linewidth = 1 ) + 
   scale_colour_manual(values = colores) + 
   labs(title = "Grupo T:
 Daily new confirmed COVID-19 deaths per million people", 
        subtitle = "7-day rolling average. For some countries the number of confirmed deaths is much lower than the true number of deaths. This is because of limited
+<<<<<<< HEAD
 testing and challenges in the attribution of the couse of death.",
 x = NULL, y = NULL, 
 caption = "Source:Johns Hopkins University CSSE COVID-19 Data")+ 
   theme(plot.title = element_text(size = 18, 
+=======
+testing and challenges in the attribution of the couse of death.", x = NULL, y = NULL, caption = "Source:Johns Hopkins University CSSE COVID-19 Data") + 
+  theme(plot.title = element_text(size = 20, 
+>>>>>>> 62d4ceb9650d80271c0423e4b5b4dc5f8f64bd4f
                                   colour = "#222222",
                                   family = "gara"),
         plot.subtitle = element_text(size = 9,
@@ -89,6 +104,7 @@ caption = "Source:Johns Hopkins University CSSE COVID-19 Data")+
         plot.caption = element_text(hjust = 0))
 graf
 ```
+
 
 **Gráfico interactivo**
 
