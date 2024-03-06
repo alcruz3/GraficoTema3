@@ -25,7 +25,8 @@ library(showtext)
 **Importación de datos**
 Cargamos en una variable los datos de la web.
 ```{r Datos}
-data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+data
 ```
 
 **Modificación de variables**
@@ -39,12 +40,16 @@ data$date <- as.Date(data$date)
 paises <- c("Spain","Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
 
 #Creamos un nuevo df con las variables que necesitamos para el gráfico
-paises <- data %>% group_by(location, date) %>% filter(location %in% paises) %>%
-  summarise(muertes = new_deaths_smoothed_per_million)
+paises <- data %>% 
+  group_by(location, date) %>% 
+  filter(location %in% paises) %>%
+  summarize(muertes = new_deaths_smoothed_per_million)
 
 #Uno distinto para España para poder modificar el ancho de linea
-spain <- data %>% group_by(location, date) %>% filter(location == "Spain") %>%
-  summarise(muertes = new_deaths_smoothed_per_million)
+spain <- data %>% 
+  group_by(location, date) %>% 
+  filter(location == "Spain") %>%
+  summarize(muertes = new_deaths_smoothed_per_million)
 ```
 
 
