@@ -97,7 +97,7 @@ caption = "Source:Johns Hopkins University CSSE COVID-19 Data") +
         plot.caption = element_text(hjust = 0,
                                     colour = "#757575",
                                     family = "gara",
-                                    size = 6))
+                                    size = 6),legend.title = "") + theme_minimal()
 graf
 ```
 
