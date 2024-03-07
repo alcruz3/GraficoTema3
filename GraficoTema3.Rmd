@@ -26,7 +26,6 @@ library(showtext)
 Cargamos en una variable los datos de la web.
 ```{r Datos}
 data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
-data
 ```
 
 **Modificación de variables**
@@ -34,25 +33,19 @@ Cambiamos el formato de las variables para poder manejarlas de mejor manera.
 
 ```{r Variables}
 #Ponemos el formato de fecha adecuado
-date <- data %>%
-  mutate(date = as.Date(date))
+data$date <- as.Date(data$date, format = "%Y-%m-%d")
 
 #Creamos un vector con los paises que queremos representar
-paises <- c("Spain","Italy","United States", "Germany","Canada", "Japan","United Kingdom", "France")
+paises <- c("Spain","Italy", "Germany","Canada","United States",
+            "Japan","United Kingdom", "France")
 
 #Creamos un nuevo df con las variables que necesitamos para el gráfico
 paises <- data %>% 
   filter(location %in% paises) %>%
-  mutate(muertes = new_deaths_smoothed_per_million) 
-  
-paises
-#Uno distinto para España para poder modificar el ancho de linea
-Spain <- data %>% 
   group_by(location, date) %>% 
-  filter(location %in% "Spain") %>%
-  mutate(muertes = new_deaths_smoothed_per_million)
+  summarise(muertes = new_deaths_smoothed_per_million) 
+  
 
-Spain
 ```
 
 
@@ -64,35 +57,38 @@ Creamos el grafico con la librería 'ggplot2'
 ```{r Gráfico}
 #Primero creamos un vector con los colores que vamos a utilizar
 colores <- c("Spain"="red","Italy" = "cyan4",
-             "United States" = "darkorchid4", "Germany" = "palegreen4",
+              "Germany" = "palegreen4",
              "Canada" = "orangered4", "Japan" = "skyblue4", 
-             "United Kingdom" = "maroon", "France" = "sienna")
-paises$location <- as.factor(paises$location)
+             "United Kingdom" = "maroon", "France" = "sienna",
+             "United States" = "darkorchid4")
 
 #Ponemos las fuentes de texto que vamos a utilizar
 ## Loading Google fonts (https://fonts.google.com/)
 font_add_google("Roboto", "Roboto")
 font_add_google("EB Garamond", "gara")
 
-showtext.auto()
+showtext_auto()
 
 
 #Creamos el gráfico
 graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
-  geom_line() + geom_line(mapping = aes(x = date, y = muertes),
-                          colour = "red", data = Spain, linewidth = 1 ) + 
+  geom_line() + 
   scale_colour_manual(values = colores) + 
-  labs(title = "Daily new confirmed COVID-19 deaths per million people", 
+  labs(title = "Grupo T
+Daily new confirmed COVID-19 deaths per million people", 
        subtitle = "7-day rolling average. For some countries the number of confirmed deaths is much lower than the true number of deaths. This is because of limited
-testing and challenges in the attribution of the couse of death.", x = NULL, y = NULL, caption = "Source:Johns Hopkins University CSSE COVID-19 Data") + 
-  theme(plot.title = element_text(size = 20, 
+testing and challenges in the attribution of the couse of death.",
+x = NULL, y = NULL, 
+caption = "Source:Johns Hopkins University CSSE COVID-19 Data") + 
+  scale_y_continuous(breaks = seq(0,20,2))+
+  theme(plot.title = element_text(size = 18, 
                                   colour = "#222222",
                                   family = "gara"),
-        plot.subtitle = element_text(size = 10,
+        plot.subtitle = element_text(size = 8,
                                      colour = "#757575",
                                      family = "Roboto"),
         plot.caption.position = "plot",
-        plot.caption = element_text(hjust = 0))
+        plot.caption = element_text(hjust = 0.1))
 graf
 ```
 
