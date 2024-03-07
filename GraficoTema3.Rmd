@@ -25,6 +25,8 @@ library(showtext)
 **Importación de datos**
 Cargamos en una variable los datos de la web.
 ```{r Datos}
+#Nos aseguramos de que el enviroment esté limpio
+rm(list = ls())
 data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
 ```
 
@@ -86,25 +88,28 @@ Daily new confirmed COVID-19 deaths per million people",
 testing and challenges in the attribution of the couse of death.",
 x = NULL, y = NULL, 
 caption = "Source:Johns Hopkins University CSSE COVID-19 Data") + 
-  scale_y_continuous(breaks = seq(0,20,2))+
-  theme(plot.title = element_text(size = 18, 
+  scale_y_continuous(breaks = seq(0,20,2)) +
+  theme(plot.title = element_text(size = 15, 
                                   colour = "#222222",
                                   family = "gara"),
-        plot.subtitle = element_text(size = 8,
+        plot.subtitle = element_text(size = 7,
                                      colour = "#757575",
                                      family = "Roboto"),
         plot.caption.position = "plot",
-        plot.caption = element_text(hjust = 0,
+        plot.caption = element_text(hjust = 0.01,
                                     colour = "#757575",
                                     family = "gara",
-                                    size = 6),legend.title = "") + theme_minimal()
+                                    size = 6),
+        panel.grid.major.y = element_line(colour = "grey", linetype = 2),
+        panel.background = element_blank())
 graf
+ggsave("GraficoTema3.pdf", plot = graf)
 ```
 
 
 **Gráfico interactivo**
 
-```{r Grafico interactivo}
+``{r Grafico interactivo}
 grafite <- ggplotly(graf)
 grafite
 ```
