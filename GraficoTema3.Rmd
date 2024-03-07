@@ -45,6 +45,11 @@ paises <- data %>%
   group_by(location, date) %>% 
   summarise(muertes = new_deaths_smoothed_per_million) 
   
+#Una df distinta para después agregar el grosor de linea
+Spain <- data %>% 
+  filter(location == "Spain") %>%
+  group_by(location, date) %>% 
+  summarise(muertes = new_deaths_smoothed_per_million) 
 
 ```
 
@@ -56,7 +61,7 @@ Creamos el grafico con la librería 'ggplot2'
 
 ```{r Gráfico}
 #Primero creamos un vector con los colores que vamos a utilizar
-colores <- c("Spain"="red","Italy" = "cyan4",
+colores <- c("Spain"="red2","Italy" = "cyan4",
               "Germany" = "palegreen4",
              "Canada" = "orangered4", "Japan" = "skyblue4", 
              "United Kingdom" = "maroon", "France" = "sienna",
@@ -72,7 +77,8 @@ showtext_auto()
 
 #Creamos el gráfico
 graf <- ggplot(paises, aes(x = date,y = muertes, color = location)) +
-  geom_line() + 
+  geom_line() + geom_line(mapping = aes(x = date, y = muertes),
+                          colour = "red2", data = Spain, linewidth = 1 ) +
   scale_colour_manual(values = colores) + 
   labs(title = "Grupo T
 Daily new confirmed COVID-19 deaths per million people", 
@@ -88,7 +94,10 @@ caption = "Source:Johns Hopkins University CSSE COVID-19 Data") +
                                      colour = "#757575",
                                      family = "Roboto"),
         plot.caption.position = "plot",
-        plot.caption = element_text(hjust = 0.1))
+        plot.caption = element_text(hjust = 0,
+                                    colour = "#757575",
+                                    family = "gara",
+                                    size = 6))
 graf
 ```
 
@@ -98,7 +107,6 @@ graf
 ```{r Grafico interactivo}
 grafite <- ggplotly(graf)
 grafite
-
 ```
 
 
