@@ -109,7 +109,7 @@ ggsave("GraficoTema3.pdf", plot = graf)
 
 **Gráfico interactivo**
 
-``{r Grafico interactivo}
+```{r Grafico interactivo}
 grafite <- ggplotly(graf)
 grafite
 ```
